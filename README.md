@@ -14,7 +14,8 @@ TTXML(티스토리/텍스트큐브 백업파일)의 내용을 워드프레스로
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to the Tools -> Import screen, Click on TTXML
 4. (For Tistory User) If you want to get numeric permalink of Tistory id.tistory.com/1, please leave checked. Otherwise, such as id.tistory.com/post-title, please uncheck.
---
+
+### 설치 및 사용법
 1. `ttxml-importer` 폴더를 `/wp-content/plugins/` 디렉토리에 업로드 합니다.
 2. 워드프레스의 플러그인 메뉴에서 플러그인을 활성화 시킵니다.
 3. 도구 -> Import 화면에서 TTXML을 선택합니다.
