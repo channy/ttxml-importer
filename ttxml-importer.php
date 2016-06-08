@@ -57,24 +57,35 @@ class TTXML_Import {
 
     function greet() {
         echo '<div class="narrow">';
-        echo '<h4>'.__('업로드 방식').'</h4>';
-        echo '<p>';
         echo __('TTXML(티스토리/텍스트큐브 백업파일)의 내용을 워드프레스로 가져올 수 있습니다.').'<br />';
         echo __('백업파일에 포함된 첨부파일이 저장되는 디렉토리').': '.$this->attach_dir.'<br />';
         echo __('텍스트큐브의 첨부파일을 위의 디렉토리에 직접 복사하셔도 됩니다.');
-        echo '</p>';
-        wp_import_upload_form("admin.php?import=ttxml&amp;step=1");
+
+
+        echo '<h4>'.__('업로드 방식').'</h4>';
+	echo '<form enctype="multipart/form-data" id="import-upload-form" method="post" class="wp-upload-form" action="admin.php?import=ttxml&amp;step=1">';
+        echo '<p><label>';
+        echo '<input type="checkbox" name="slug" checked value="num" />'.__('숫자로된 Tistory URL 그대로 옮겨오기 예: id.tistory.com/1');
+        echo '</label></p>';
+	echo '<p><label for="upload">컴퓨터에서 파일 찾기:</label> (최대 크기: 2 MB)';
+	echo '<input id="upload" name="import" size="25" type="file">';
+	echo '</p>';
+	echo '<p class="submit"><input disabled="" name="submit" id="submit" class="button button-primary" value="파일 업로드 후 가져오기" type="submit"></p></form>';
+
         echo '<h4>'.__('주소입력 방식').'</h4>';
+        echo '<form action="admin.php?import=ttxml&amp;step=1" method="post">';
+        echo '<p>';
+	echo '<label>';
+	echo '<input type="checkbox" name="slug" checked value="num" />'.__('숫자로된 Tistory URL 그대로 옮겨오기 예: id.tistory.com/1');
+        echo '</label>';
         echo '<p>';
         echo __('웹서버 로컬 경로 또는 http://가 포함된 URL의 백업파일도 가능합니다.');
         echo '</p>';
-        echo '<form action="admin.php?import=ttxml&amp;step=1" method="post">';
-        echo '<p>';
         echo '<label>'.__('백업파일의 위치').':';
-        echo ' (ex: /home/my/backup.xml, http://foo.com/backup.xml)<br />';
-        echo '<input type="text" size="50" name="filepath" />';
+        echo ' (ex: '.$this->attach_dir.' , http://foo.com/backup.xml)<br />';
+        echo '<input type="text" size="40" name="filepath" />';
         echo '</label>';
-        echo '<input type="submit" />';
+        echo '<input type="submit" value="Summit" />';
         echo '</p>';
         echo '</form>';
         echo '<h4>'.__('참고사항').'</h4>';
@@ -312,7 +323,8 @@ class TTXML_Import {
         $post_type = (strpos($data, '<post') === 0) ? 'post' : 'page';
 
         if ( $post_type == 'post' ) {
-            preg_match('|^<post slogan="([^"]+)"|s', $data, $post_name);
+	    if($_POST['slug'] == 'num' )  preg_match('|<id>([^<]+)</id>|s', $data, $post_name);
+	    else preg_match('|^<post slogan="([^"]+)"|s', $data, $post_name);
             $post_name = trim($post_name[1]);
             $post_name = $wpdb->escape($post_name);
         } else {
